@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="nilaimurid" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Simple Crud Web3</title>
+    <link rel="stylesheet" type="text/css" href="main.css" />
+    <script src="./node_modules/web3/dist/web3.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Simple Crud Web3</h1>
+      <h2 id="outputweb3"></h2>
+      <label for="title" class="col-lg-2 control-label">Title</label>
+      <input id="title" type="text" />
+      <label for="author" class="col-lg-2 control-label">Author</label>
+      <input id="author" type="text" />
+      <button id="button">Submit</button>
+    </div>
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script>
+      //-----Start of JavaScript functions-----
+      async function loadWeb3() {
+        //---if MetaMask is available on your web browser---
+        if (window.ethereum) {
+          web3 = new Web3(window.ethereum);
+          //---connect to MetaMask---
+          const account = await window.ethereum.request({ method: "eth_requestAccounts" });
+          console.log(account);
+        } else {
+          //---set the provider you want from Web3.providers---
+          web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+        }
+      }
+
+      async function loadContract() {
+        abi = [
+          {
+            inputs: [],
+            name: "get",
+            outputs: [
+              {
+                internalType: "string",
+                name: "",
+                type: "string",
+              },
+              {
+                internalType: "string",
+                name: "",
+                type: "string",
+              },
+            ],
+            stateMutability: "view",
+            type: "function",
+            constant: true,
+            signature: "0x6d4ce63c",
+          },
+          {
+            inputs: [
+              {
+                internalType: "string",
+                name: "_title",
+                type: "string",
+              },
+              {
+                internalType: "string",
+                name: "_author",
+                type: "string",
+              },
+            ],
+            name: "set",
+            outputs: [],
+            stateMutability: "nonpayable",
+            type: "function",
+            signature: "0xe942b516",
+          },
+        ];
+
+        // Contract Address
+        address = "0xe90D97178f1893A65a244Da9E03171B3E6BC9DE4";
+        console.log(address);
+        return await new web3.eth.Contract(abi, address);
+      }
+
+      // Mendapatkan account teratas
+      async function getCurrentAccount() {
+        const accounts = await web3.eth.getAccounts();
+        console.log(accounts);
+        return accounts[0];
+      }
+
+      async function load() {
+        await loadWeb3();
+        isiKontrak = await loadContract();
+
+        console.log(isiKontrak.methods.get().call());
+
+        isiKontrak.methods.get().call(function (error, result) {
+          $("#outputweb3").html("Title: " + result[0] + "<BR>Author: " + result[1]);
+          if (!error) {
+            console.log(result);
+          } else {
+            console.error(error);
+          }
+        });
+
+        $("#button").click(async function () {
+          const account = await getCurrentAccount();
+          isiKontrak.methods.set($("#title").val(), $("#author").val()).send({ from: account });
+          // window.location.reload();
+        });
+      }
+
+      load();
+      //-----End of JavaScript functions-----
+    </script>
+  </body>
+</html>

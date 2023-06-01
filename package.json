@@ -1,0 +1,23 @@
+{
+  "name": "simple-web3",
+  "version": "1.0.0",
+  "description": "crud web3",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raihanromzi/simple-web3.git"
+  },
+  "author": "Raihan Romzi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/raihanromzi/simple-web3/issues"
+  },
+  "homepage": "https://github.com/raihanromzi/simple-web3#readme",
+  "dependencies": {
+    "@metamask/detect-provider": "^2.0.0",
+    "web3": "^1.10.0"
+  }
+}
